@@ -176,72 +176,89 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══ INSIGHT INDEX = EXPERTISE SECTION ══ */}
+      {/* ══ INSIGHT INDEX = SHELVES + TEXT ══ */}
       <section id="insight-index" style={{
-        minHeight: "90vh", padding: "80px 40px", position: "relative", overflow: "hidden",
-        background: "linear-gradient(180deg, rgba(210,232,248,0) 0%, rgba(240,248,255,0.6) 100%)",
+        padding: "80px 60px", position: "relative", overflow: "hidden",
+        background: "#f7f5f2",
       }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }}>
-
-          {/* Left: image collage */}
-          <div style={{ position: "relative", height: "480px" }}>
-            <div style={{ position: "absolute", top: 0, left: 0 }}>
-              <PhotoCard emoji="📰" label="press_release.jpg" rotation={-3} animClass="anim-float" delay="0s"
-                bg="linear-gradient(135deg,#e8e0d8,#d4ccc0)" width={200} height={150} />
-            </div>
-            <div style={{ position: "absolute", top: "130px", left: "30px" }}>
-              <PhotoCard emoji="📡" label="media_coverage.jpg" rotation={2} animClass="anim-drift" delay="0.7s"
-                bg="linear-gradient(135deg,#d0e8d8,#b8d8c0)" width={200} height={150} />
-            </div>
-            <div style={{ position: "absolute", top: "260px", left: "10px" }}>
-              <PhotoCard emoji="📊" label="research.jpg" rotation={-4} animClass="anim-floatB" delay="1.3s"
-                bg="linear-gradient(135deg,#d8e8f8,#c0d8f0)" width={190} height={140} />
-            </div>
+        <div style={{
+          maxWidth: "1100px", margin: "0 auto",
+          display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center",
+        }}>
+          {/* LEFT: shelves */}
+          <div>
+            {[
+              [{ e: "🎧", h: 80 }, { e: "👟", h: 100 }, { e: "👟", h: 90 }],
+              [{ e: "🧴", h: 70 }, { e: "🖊️", h: 55 }, { e: "🛍️", h: 85 }, { e: "🛍️", h: 75 }],
+              [{ e: "👕", h: 88 }, { e: "🎨", h: 80 }],
+              [{ e: "🧴", h: 65 }, { e: "🧴", h: 55 }, { e: "🧪", h: 68 }, { e: "🧪", h: 58 }],
+            ].map((row, si) => (
+              <div key={si}>
+                <div style={{ display: "flex", alignItems: "flex-end", gap: "20px", paddingBottom: "10px", paddingLeft: "8px" }}>
+                  {row.map((item, ii) => (
+                    <div
+                      key={ii}
+                      className={["anim-float","anim-floatB","anim-drift","anim-wiggle"][ii % 4]}
+                      style={{
+                        "--r": "0deg",
+                        animationDelay: `${(si * 0.35 + ii * 0.12).toFixed(2)}s`,
+                        filter: "drop-shadow(3px 8px 6px rgba(0,0,0,0.22))",
+                        fontSize: `${item.h}px`,
+                        lineHeight: "1",
+                      } as React.CSSProperties}
+                    >
+                      {item.e}
+                    </div>
+                  ))}
+                </div>
+                <div style={{
+                  height: "6px",
+                  background: "linear-gradient(180deg, #dedad6 0%, #c8c4c0 100%)",
+                  borderRadius: "2px",
+                  boxShadow: "0 3px 8px rgba(0,0,0,0.14)",
+                  marginBottom: "36px",
+                }} />
+              </div>
+            ))}
           </div>
 
-          {/* Right: text + expertise cards */}
+          {/* RIGHT: text + Notes sticky */}
           <div>
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", color: "#888", marginBottom: "12px", textTransform: "uppercase" }}>
-              ── areas of expertise
-            </p>
             <h2 style={{
               fontFamily: "'DM Serif Display', serif",
-              fontSize: "clamp(36px, 5vw, 60px)",
-              fontWeight: "400", lineHeight: "1", marginBottom: "28px",
+              fontSize: "clamp(40px, 5vw, 68px)",
+              fontWeight: "400", lineHeight: "1.05", marginBottom: "20px", color: "#1a1a1a",
             }}>
-              insight{" "}
+              insight the{" "}
               <span className="hl-yellow" style={{ fontStyle: "italic" }}>index</span>
             </h2>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#555", lineHeight: "1.8", marginBottom: "32px", maxWidth: "340px" }}>
-              before we communicate, we must understand the landscape: the unaddressed story, the missed angle, the message that never landed.
+            <p style={{
+              fontFamily: "'DM Sans', sans-serif", fontSize: "15px",
+              color: "#333", lineHeight: "1.8", marginBottom: "36px", maxWidth: "340px",
+            }}>
+              before we communicate, we must acknowledge: the unread brief. the missed angle. the message that never landed.
             </p>
 
-            {/* Expertise floating cards — stacked here, floating in hero */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "flex-start" }}>
-              {[
-                { emoji: "📰", label: "Press Releases", delay: "0s" },
-                { emoji: "🎙️", label: "Media Relations", delay: "0.3s" },
-                { emoji: "📊", label: "Research", delay: "0.6s" },
-                { emoji: "🤝", label: "Stakeholder Engagement", delay: "0.9s" },
-                { emoji: "🌎", label: "International Affairs", delay: "1.2s" },
-              ].map((c, i) => (
-                <ExpertiseCard key={c.label} {...c} rotation={i % 2 === 0 ? -1 : 1} />
-              ))}
+            {/* Notes app */}
+            <div style={{
+              background: "#fdfcf5", borderRadius: "10px",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.1)", padding: "16px 20px",
+              maxWidth: "300px", border: "1px solid rgba(0,0,0,0.06)",
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#aaa" }}>Notes</span>
+                <div style={{ display: "flex", gap: "12px" }}>
+                  <span style={{ fontSize: "14px", color: "#bbb" }}>⬆</span>
+                  <span style={{ fontSize: "14px", color: "#bbb" }}>···</span>
+                </div>
+              </div>
+              <span style={{ background: "#f5e642", padding: "2px 6px", fontFamily: "'DM Sans', sans-serif", fontSize: "13px", fontWeight: "600", borderRadius: "2px" }}>
+                affirmation
+              </span>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#444", lineHeight: "1.7", marginTop: "10px" }}>
+                you are not behind. you are just in your strategy era. eras can always change xx
+              </p>
             </div>
-          </div>
-        </div>
-
-        {/* Sticky note */}
-        <div className="anim-wiggle" style={{
-          position: "absolute", bottom: "60px", right: "5%",
-          "--r": "-3deg", transform: "rotate(-3deg)",
-          maxWidth: "200px", zIndex: 5,
-        } as React.CSSProperties}>
-          <div className="sticky">
-            <span style={{ background: "#f5e642", padding: "1px 4px", fontWeight: "600", fontSize: "12px" }}>affirmation</span>
-            <p style={{ marginTop: "10px", fontSize: "12px" }}>
-              you are not lost in the message. you are just in your strategy era. eras can always change xx
-            </p>
           </div>
         </div>
       </section>
