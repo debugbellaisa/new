@@ -63,7 +63,7 @@ function FolderBtn({
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
 
-  const sections = ["home", "assess damage", "aura cleanse", "the formula", "serving xx"];
+  const sections = ["home", "insight index", "the paper trail", "the girl behind the metrics"];
 
   return (
     <div style={{ position: "relative", zIndex: 1 }}>
@@ -77,7 +77,7 @@ export default function Home() {
           {sections.map((s) => (
             <a
               key={s}
-              href={`#${s.replace(/\s/g, "-")}`}
+              href={`#${s.replace(/\s+/g, "-")}`}
               className={`pill ${activeSection === s ? "active" : ""}`}
               onClick={() => setActiveSection(s)}
             >
@@ -177,8 +177,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══ ASSESS DAMAGE = EXPERTISE SECTION ══ */}
-      <section id="assess-damage" style={{
+      {/* ══ INSIGHT INDEX = EXPERTISE SECTION ══ */}
+      <section id="insight-index" style={{
         minHeight: "90vh", padding: "80px 40px", position: "relative", overflow: "hidden",
         background: "linear-gradient(180deg, rgba(210,232,248,0) 0%, rgba(240,248,255,0.6) 100%)",
       }}>
@@ -210,8 +210,8 @@ export default function Home() {
               fontSize: "clamp(36px, 5vw, 60px)",
               fontWeight: "400", lineHeight: "1", marginBottom: "28px",
             }}>
-              assess the{" "}
-              <span className="hl-yellow" style={{ fontStyle: "italic" }}>damage</span>
+              insight{" "}
+              <span className="hl-yellow" style={{ fontStyle: "italic" }}>index</span>
             </h2>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#555", lineHeight: "1.8", marginBottom: "32px", maxWidth: "340px" }}>
               before we communicate, we must understand the landscape: the unaddressed story, the missed angle, the message that never landed.
@@ -225,7 +225,6 @@ export default function Home() {
                 { emoji: "📊", label: "Research", delay: "0.6s" },
                 { emoji: "🤝", label: "Stakeholder Engagement", delay: "0.9s" },
                 { emoji: "🌎", label: "International Affairs", delay: "1.2s" },
-                { emoji: "📱", label: "Content Strategy", delay: "1.5s" },
               ].map((c, i) => (
                 <ExpertiseCard key={c.label} {...c} rotation={i % 2 === 0 ? -1 : 1} />
               ))}
@@ -248,8 +247,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══ AURA CLEANSE = DELIVERABLES ══ */}
-      <section id="aura-cleanse" style={{
+      {/* ══ THE PAPER TRAIL = DELIVERABLES ══ */}
+      <section id="the-paper-trail" style={{
         minHeight: "80vh", padding: "80px 40px",
         background: "#1a1a1a", position: "relative", overflow: "hidden",
       }}>
@@ -262,11 +261,11 @@ export default function Home() {
             fontSize: "clamp(36px, 5vw, 64px)",
             fontWeight: "400", color: "#f7f3ee", marginBottom: "16px", lineHeight: "1",
           }}>
-            cleanse the{" "}
-            <span className="hl-mint" style={{ fontStyle: "italic", color: "#1a1a1a" }}>aura</span>
+            the{" "}
+            <span className="hl-mint" style={{ fontStyle: "italic", color: "#1a1a1a" }}>paper trail</span>
           </h2>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#888", marginBottom: "52px", lineHeight: "1.7", maxWidth: "420px" }}>
-            if it doesn&rsquo;t spark clarity,<br />it sparks the archive xx
+            every story leaves evidence.<br />here&rsquo;s mine.
           </p>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "flex-end" }}>
@@ -292,8 +291,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══ THE FORMULA = ABOUT ══ */}
-      <section id="the-formula" style={{
+      {/* ══ THE GIRL BEHIND THE METRICS = ABOUT ══ */}
+      <section id="the-girl-behind-the-metrics" style={{
         minHeight: "70vh", padding: "80px 40px",
         background: "linear-gradient(180deg, #d0e5f5 0%, #c4ddf0 100%)",
         position: "relative", overflow: "hidden",
@@ -305,11 +304,11 @@ export default function Home() {
             </p>
             <h2 style={{
               fontFamily: "'DM Serif Display', serif",
-              fontSize: "clamp(36px, 5vw, 60px)",
-              fontWeight: "400", lineHeight: "1", marginBottom: "24px",
+              fontSize: "clamp(28px, 4vw, 52px)",
+              fontWeight: "400", lineHeight: "1.05", marginBottom: "24px",
             }}>
-              the{" "}
-              <span className="hl-pink" style={{ fontStyle: "italic" }}>formula</span>
+              the girl behind{" "}
+              <span className="hl-pink" style={{ fontStyle: "italic" }}>the metrics</span>
             </h2>
             <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: "#333", lineHeight: "1.8", marginBottom: "20px" }}>
               Strategic communications professional based in Panama City, with expertise spanning{" "}
@@ -356,54 +355,6 @@ export default function Home() {
               🗣️ EN / ES
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* ══ SERVING XX = CONNECT ══ */}
-      <section id="serving-xx" style={{
-        minHeight: "50vh", padding: "80px 40px",
-        background: "linear-gradient(180deg, #c4ddf0 0%, #b8d4ec 100%)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        textAlign: "center", position: "relative",
-      }}>
-        <div style={{ position: "relative", zIndex: 2 }}>
-          <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", color: "#888", marginBottom: "12px", textTransform: "uppercase" }}>
-            ── serving xx
-          </p>
-          <h2 style={{
-            fontFamily: "'DM Serif Display', serif",
-            fontSize: "clamp(48px, 8vw, 100px)",
-            fontWeight: "400", lineHeight: "0.9", marginBottom: "28px",
-          }}>
-            say{" "}
-            <span className="hl-yellow" style={{ fontStyle: "italic" }}>hello</span>
-            <br />
-            <span style={{ color: "#555", fontStyle: "italic" }}>& let&rsquo;s talk.</span>
-          </h2>
-          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
-              className="pill" style={{ background: "#0077B5", color: "white", borderColor: "transparent", fontSize: "14px" }}>
-              💼 LinkedIn ↗
-            </a>
-            <a href="mailto:placeholder@email.com"
-              className="pill" style={{ background: "rgba(255,255,255,0.75)", fontSize: "14px" }}>
-              ✉️ Email Me
-            </a>
-          </div>
-        </div>
-
-        {/* Floating cards scattered */}
-        <div className="anim-float desktop-collage" style={{
-          position: "absolute", top: "30px", left: "5%", "--r": "-5deg",
-          animationDelay: "0.3s",
-        } as React.CSSProperties}>
-          <ExpertiseCard emoji="📱" label="Content Strategy" rotation={-5} animClass="" />
-        </div>
-        <div className="anim-floatB desktop-collage" style={{
-          position: "absolute", bottom: "40px", right: "6%", "--r": "4deg",
-          animationDelay: "0.9s",
-        } as React.CSSProperties}>
-          <ExpertiseCard emoji="🤝" label="Stakeholder Engagement" rotation={4} animClass="" />
         </div>
       </section>
 
