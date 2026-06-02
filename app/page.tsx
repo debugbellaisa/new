@@ -140,8 +140,8 @@ export default function Home() {
               marginBottom: "18px",
             }}
           >
-            communications{" "}
-            <span className="hl-yellow" style={{ fontStyle: "italic" }}>portfolio</span>
+            girlymedia
+            <span className="hl-yellow" style={{ fontStyle: "italic" }}>metrics</span>
           </h1>
           <p style={{
             fontFamily: "'DM Sans', sans-serif",
@@ -151,8 +151,7 @@ export default function Home() {
             maxWidth: "380px",
             margin: "0 auto 28px",
           }}>
-            how to go from <span className="wavy">scattered ideas</span>
-            <br />to <strong>strategic storytelling</strong>
+            a showcase of everything that makes <em>me</em>
           </p>
           <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
             <a href="#assess-damage" className="pill" style={{ background: "rgba(0,0,0,0.85)", color: "white", borderColor: "transparent" }}>
