@@ -44,10 +44,10 @@ function ExpertiseCard({
 }
 
 function FolderBtn({
-  label, icon, color, textColor = "#1a1a1a", rotation = 0,
-}: { label: string; icon: string; color: string; textColor?: string; rotation?: number }) {
+  label, icon, color, textColor = "#1a1a1a", rotation = 0, href = "#",
+}: { label: string; icon: string; color: string; textColor?: string; rotation?: number; href?: string }) {
   return (
-    <a href="#" className="folder-wrap" style={{ transform: `rotate(${rotation}deg)`, display: "inline-block" }}>
+    <a href={href} className="folder-wrap" style={{ transform: `rotate(${rotation}deg)`, display: "inline-block" }}>
       <div className="folder-tab-nub" style={{ background: color }} />
       <div className="folder-body" style={{ background: color, color: textColor }}>
         <span>{icon}</span>{label}
@@ -284,7 +284,7 @@ export default function Home() {
           </p>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "flex-end" }}>
-            <FolderBtn label="Reports"         icon="📋" color="#FFD166" rotation={-2} />
+            <FolderBtn label="Reports"         icon="📋" color="#FFD166" rotation={-2} href="/reports" />
             <FolderBtn label="Press Notes"     icon="📝" color="#FF9EAA" rotation={1} />
             <FolderBtn label="Media Monitoring" icon="📡" color="#A8E6CF" textColor="#1a1a1a" rotation={-3} />
             <FolderBtn label="Writing Samples" icon="✍️" color="#C5B8FF" rotation={2} />
