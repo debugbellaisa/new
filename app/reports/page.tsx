@@ -55,47 +55,23 @@ export default function ReportsIndexPage() {
           Reports
         </h1>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {reports.map((r) => (
             <Link
               key={r.slug}
               href={`/reports/${r.slug}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              style={{ textDecoration: "none", color: "inherit", display: "inline-flex", alignItems: "center", gap: "14px" }}
             >
-              <div style={{
-                border: "1.5px solid rgba(0,0,0,0.1)",
-                borderRadius: "6px",
-                padding: "28px 32px",
-                background: "white",
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-                gap: "24px", flexWrap: "wrap",
-                transition: "box-shadow 0.2s, transform 0.2s",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.boxShadow = "4px 6px 20px rgba(0,0,0,0.12)"; (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.boxShadow = "none"; (e.currentTarget as HTMLDivElement).style.transform = "none"; }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                  <PinkFolder size={52} />
-                  <div>
-                    <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "9px", letterSpacing: "0.15em", color: "#aaa", textTransform: "uppercase", marginBottom: "6px" }}>
-                      {r.tag} · {r.year}
-                    </p>
-                    <p style={{ fontFamily: "'DM Serif Display', serif", fontSize: "22px", fontWeight: "400", marginBottom: "6px" }}>
-                      {r.title}
-                    </p>
-                    <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: "#888", marginBottom: "8px" }}>
-                      {r.subtitle}
-                    </p>
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#666", lineHeight: "1.6" }}>
-                      {r.desc}
-                    </p>
-                  </div>
-                </div>
-                <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "12px", color: "#aaa", flexShrink: 0 }}>
-                  READ →
-                </span>
-              </div>
+              <PinkFolder size={52} />
+              <span style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: "18px",
+                fontWeight: "700",
+                color: "#1a1a1a",
+                letterSpacing: "-0.01em",
+              }}>
+                {r.title} 🍪
+              </span>
             </Link>
           ))}
         </div>
