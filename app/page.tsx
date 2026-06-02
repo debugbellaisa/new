@@ -140,8 +140,7 @@ export default function Home() {
               marginBottom: "18px",
             }}
           >
-            girlymedia
-            <span className="hl-yellow" style={{ fontStyle: "italic" }}>metrics</span>
+            girlymedia<span className="hl-yellow" style={{ fontStyle: "italic" }}>metrics</span>
           </h1>
           <p style={{
             fontFamily: "'DM Sans', sans-serif",
@@ -256,7 +255,7 @@ export default function Home() {
                 affirmation
               </span>
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "#444", lineHeight: "1.7", marginTop: "10px" }}>
-                you are not behind. you are just in your strategy era. eras can always change xx
+                quality is the best business plan
               </p>
             </div>
           </div>
