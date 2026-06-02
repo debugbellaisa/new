@@ -31,7 +31,6 @@ export default function ReportsIndexPage() {
   return (
     <div style={{ background: "#f5f0e8", minHeight: "100vh", fontFamily: "'DM Sans', sans-serif" }}>
 
-      {/* Nav */}
       <nav style={{
         padding: "20px 48px", borderBottom: "1px solid rgba(0,0,0,0.08)",
         display: "flex", alignItems: "center", gap: "16px",
@@ -41,40 +40,22 @@ export default function ReportsIndexPage() {
         <Link href="/#the-paper-trail" style={{ fontFamily: "'Space Mono', monospace", fontSize: "11px", color: "#888", textDecoration: "none", letterSpacing: "0.08em" }}>
           ← PAPER TRAIL
         </Link>
-        <span style={{ color: "#ccc" }}>·</span>
-        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "11px", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-          Reports
-        </span>
       </nav>
 
       <main style={{ maxWidth: "900px", margin: "0 auto", padding: "60px 48px" }}>
-        <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", color: "#888", textTransform: "uppercase", marginBottom: "12px" }}>
-          ── reports archive
-        </p>
         <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(40px, 6vw, 72px)", fontWeight: "400", marginBottom: "48px", lineHeight: "1" }}>
           Reports
         </h1>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          {reports.map((r) => (
-            <Link
-              key={r.slug}
-              href={`/reports/${r.slug}`}
-              style={{ textDecoration: "none", color: "inherit", display: "inline-flex", alignItems: "center", gap: "14px" }}
-            >
-              <PinkFolder size={52} />
-              <span style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "18px",
-                fontWeight: "700",
-                color: "#1a1a1a",
-                letterSpacing: "-0.01em",
-              }}>
-                {r.title} 🍪
-              </span>
-            </Link>
-          ))}
-        </div>
+        <Link
+          href="/reports/crumbl-vs-insomnia"
+          style={{ textDecoration: "none", color: "inherit", display: "inline-flex", alignItems: "center", gap: "14px" }}
+        >
+          <PinkFolder size={52} />
+          <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "18px", fontWeight: "700", color: "#1a1a1a" }}>
+            Crumbl vs. Insomnia 🍪
+          </span>
+        </Link>
       </main>
     </div>
   );
