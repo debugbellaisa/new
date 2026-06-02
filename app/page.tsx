@@ -43,14 +43,33 @@ function ExpertiseCard({
   );
 }
 
+function PinkFolder({ size = 22 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Folder back */}
+      <rect x="1" y="6" width="30" height="21" rx="3" fill="#f48fb1" />
+      {/* Tab */}
+      <path d="M1 6 Q1 4 3 4 L12 4 Q14 4 15 6 Z" fill="#f48fb1" />
+      {/* Folder front highlight */}
+      <rect x="1" y="8" width="30" height="19" rx="3" fill="#f8bbd9" />
+      {/* Shine */}
+      <ellipse cx="10" cy="13" rx="5" ry="2.5" fill="rgba(255,255,255,0.45)" transform="rotate(-15 10 13)" />
+      {/* Sparkles */}
+      <text x="17" y="20" fontSize="8" fill="white" opacity="0.9">✦</text>
+      <text x="8" y="22" fontSize="5" fill="white" opacity="0.7">✦</text>
+      <text x="22" y="14" fontSize="5" fill="white" opacity="0.6">✦</text>
+    </svg>
+  );
+}
+
 function FolderBtn({
-  label, icon, color, textColor = "#1a1a1a", rotation = 0, href = "#",
-}: { label: string; icon: string; color: string; textColor?: string; rotation?: number; href?: string }) {
+  label, icon, color, textColor = "#1a1a1a", rotation = 0, href = "#", girly = false,
+}: { label: string; icon: string; color: string; textColor?: string; rotation?: number; href?: string; girly?: boolean }) {
   return (
     <a href={href} className="folder-wrap" style={{ transform: `rotate(${rotation}deg)`, display: "inline-block" }}>
       <div className="folder-tab-nub" style={{ background: color }} />
       <div className="folder-body" style={{ background: color, color: textColor }}>
-        <span>{icon}</span>{label}
+        {girly ? <PinkFolder /> : <span>{icon}</span>}{label}
       </div>
     </a>
   );
@@ -284,7 +303,7 @@ export default function Home() {
           </p>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "flex-end" }}>
-            <FolderBtn label="Reports"         icon="📋" color="#FFD166" rotation={-2} href="/reports" />
+            <FolderBtn label="Reports"         icon="📋" color="#FFD166" rotation={-2} href="/reports" girly={true} />
             <FolderBtn label="Press Notes"     icon="📝" color="#FF9EAA" rotation={1} />
             <FolderBtn label="Media Monitoring" icon="📡" color="#A8E6CF" textColor="#1a1a1a" rotation={-3} />
             <FolderBtn label="Writing Samples" icon="✍️" color="#C5B8FF" rotation={2} />
