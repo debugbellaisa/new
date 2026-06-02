@@ -1,515 +1,422 @@
 "use client";
 
-import FloatingCard from "./components/FloatingCard";
-import DeliverableButton from "./components/DeliverableButton";
-import PhotoCard from "./components/PhotoCard";
+import { useState } from "react";
 
-const floatingCards = [
-  { emoji: "📰", label: "Press Releases", rotation: -4, animationClass: "animate-float-slow", animationDelay: "0s", colorClass: "bg-white" },
-  { emoji: "🎙️", label: "Media Relations", rotation: 3, animationClass: "animate-float-medium", animationDelay: "0.8s", colorClass: "bg-[#FFF3CD]" },
-  { emoji: "📊", label: "Research", rotation: -2, animationClass: "animate-drift", animationDelay: "1.2s", colorClass: "bg-[#E8F4FF]" },
-  { emoji: "🤝", label: "Stakeholder Engagement", rotation: 5, animationClass: "animate-float-slow", animationDelay: "0.4s", colorClass: "bg-[#FFE8F0]" },
-  { emoji: "🌎", label: "International Affairs", rotation: -6, animationClass: "animate-float-medium", animationDelay: "1.8s", colorClass: "bg-[#E8FFE8]" },
-  { emoji: "📱", label: "Content Strategy", rotation: 4, animationClass: "animate-wiggle", animationDelay: "0.6s", colorClass: "bg-[#F0E8FF]" },
-];
+/* ────────────────────────────────────────────────
+   SUB-COMPONENTS (inline to keep file count low)
+──────────────────────────────────────────────── */
 
-const deliverables = [
-  { label: "Reports", color: "#FFD166", icon: "📋", rotation: -2 },
-  { label: "Press Notes", color: "#FF9EAA", icon: "📝", rotation: 1 },
-  { label: "Media Monitoring", color: "#A8E6CF", icon: "📡", rotation: -3 },
-  { label: "Writing Samples", color: "#C5B8FF", icon: "✍️", rotation: 2 },
-  { label: "Certifications", color: "#FFB347", icon: "🏆", rotation: -1 },
-  { label: "Resumen / CV", color: "#87CEEB", icon: "📄", rotation: 3 },
-];
+function PhotoCard({
+  emoji, label, width = 160, height = 120, rotation = 0,
+  animClass = "anim-float", delay = "0s", bg = "linear-gradient(135deg,#dce8f5,#c5d8f0)",
+}: {
+  emoji: string; label: string; width?: number; height?: number;
+  rotation?: number; animClass?: string; delay?: string; bg?: string;
+}) {
+  return (
+    <div
+      className={`photo-card ${animClass}`}
+      style={{ "--r": `${rotation}deg`, animationDelay: delay, width } as React.CSSProperties}
+    >
+      <div style={{
+        width: width - 16, height, background: bg,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: "40px",
+      }}>{emoji}</div>
+      <span className="label">{label}</span>
+    </div>
+  );
+}
+
+function ExpertiseCard({
+  emoji, label, rotation = 0, animClass = "anim-float", delay = "0s",
+}: { emoji: string; label: string; rotation?: number; animClass?: string; delay?: string }) {
+  return (
+    <a
+      href="#work"
+      className={`expertise-card ${animClass}`}
+      style={{ "--r": `${rotation}deg`, animationDelay: delay, transform: `rotate(${rotation}deg)` } as React.CSSProperties}
+    >
+      <span style={{ fontSize: "18px" }}>{emoji}</span>
+      {label}
+    </a>
+  );
+}
+
+function FolderBtn({
+  label, icon, color, textColor = "#1a1a1a", rotation = 0,
+}: { label: string; icon: string; color: string; textColor?: string; rotation?: number }) {
+  return (
+    <a href="#" className="folder-wrap" style={{ transform: `rotate(${rotation}deg)`, display: "inline-block" }}>
+      <div className="folder-tab-nub" style={{ background: color }} />
+      <div className="folder-body" style={{ background: color, color: textColor }}>
+        <span>{icon}</span>{label}
+      </div>
+    </a>
+  );
+}
+
+/* ────────────────────────────────────────────────
+   MAIN PAGE
+──────────────────────────────────────────────── */
 
 export default function Home() {
-  return (
-    <div style={{ background: "#f5f0e8", minHeight: "100vh" }}>
+  const [activeSection, setActiveSection] = useState("home");
 
-      {/* ── NAV ── */}
+  const sections = ["home", "assess damage", "aura cleanse", "the formula", "serving xx"];
+
+  return (
+    <div style={{ position: "relative", zIndex: 1 }}>
+
+      {/* ══ PILL NAV ══ */}
       <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "12px 32px",
-        background: "rgba(245, 240, 232, 0.85)",
-        backdropFilter: "blur(8px)",
-        borderBottom: "1.5px solid rgba(0,0,0,0.08)",
+        position: "fixed", top: "20px", left: 0, right: 0, zIndex: 100,
+        display: "flex", justifyContent: "center", padding: "0 20px",
       }}>
-        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", letterSpacing: "0.12em", color: "#1a1a1a" }}>
-          ISABELLA ALEMÁN
-        </span>
-        <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
-          {["About", "Work", "Contact"].map((item) => (
+        <div className="pill-nav">
+          {sections.map((s) => (
             <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "11px",
-                fontWeight: "700",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "#1a1a1a",
-                textDecoration: "none",
-                borderBottom: "2px solid transparent",
-                transition: "border-color 0.2s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.borderBottomColor = "#FF6B6B")}
-              onMouseLeave={(e) => (e.currentTarget.style.borderBottomColor = "transparent")}
+              key={s}
+              href={`#${s.replace(/\s/g, "-")}`}
+              className={`pill ${activeSection === s ? "active" : ""}`}
+              onClick={() => setActiveSection(s)}
             >
-              {item}
+              {s}
             </a>
           ))}
-          <a
-            href="#contact"
-            style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: "11px",
-              fontWeight: "700",
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              background: "#1a1a1a",
-              color: "#f5f0e8",
-              padding: "8px 16px",
-              borderRadius: "4px",
-              textDecoration: "none",
-              transition: "background 0.2s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#FF6B6B")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#1a1a1a")}
-          >
-            LinkedIn ↗
-          </a>
         </div>
       </nav>
 
-      {/* ── HERO SECTION ── */}
-      <section
-        id="about"
-        style={{
-          minHeight: "100vh",
-          padding: "100px 40px 60px",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Background decorative lines */}
-        <div style={{
-          position: "absolute", top: "120px", left: "0", right: "0", height: "1px",
-          background: "repeating-linear-gradient(90deg, rgba(0,0,0,0.06) 0px, rgba(0,0,0,0.06) 1px, transparent 1px, transparent 32px)",
-          pointerEvents: "none",
-        }} />
+      {/* ══ HERO ══ */}
+      <section id="home" style={{
+        minHeight: "100vh", position: "relative", overflow: "hidden",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "80px 40px 60px",
+      }}>
 
-        {/* MAIN TITLE BLOCK */}
-        <div style={{
-          position: "relative",
-          marginTop: "40px",
-          marginLeft: "5vw",
-          zIndex: 10,
-          maxWidth: "700px",
-        }}>
-          <p style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: "11px",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "#888",
-            marginBottom: "12px",
-          }}>
-            ★ COMMUNICATIONS PROFESSIONAL ★ BASED IN PANAMA
-          </p>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(52px, 8vw, 110px)",
-            fontWeight: "900",
-            lineHeight: "0.9",
-            letterSpacing: "-0.02em",
-            color: "#1a1a1a",
-            marginBottom: "0",
-          }}>
-            A creative{" "}
-            <span className="highlight-yellow" style={{ fontStyle: "italic" }}>guide</span>
-            <br />
-            <span style={{ fontStyle: "italic", color: "#444" }}>through</span>{" "}
-            <span style={{ color: "#FF6B6B" }}>stories.</span>
+        {/* ── Scattered photo cards – desktop ── */}
+        <div className="desktop-collage" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+
+          {/* Left cluster */}
+          <div style={{ position: "absolute", top: "14%", left: "3%", pointerEvents: "auto" }}>
+            <PhotoCard emoji="🤍" label="slay.png" rotation={-5} animClass="anim-float" delay="0s"
+              bg="linear-gradient(135deg,#f0e8e0,#e0d4c4)" width={150} height={110} />
+          </div>
+          <div style={{ position: "absolute", top: "38%", left: "5%", pointerEvents: "auto" }}>
+            <PhotoCard emoji="🌿" label="Details.jpg" rotation={4} animClass="anim-drift" delay="0.6s"
+              bg="linear-gradient(135deg,#d4e8d4,#b8d4b8)" width={130} height={100} />
+          </div>
+          <div style={{ position: "absolute", top: "62%", left: "2%", pointerEvents: "auto" }}>
+            <PhotoCard emoji="☁️" label="Details.jpg" rotation={-3} animClass="anim-floatB" delay="1.2s"
+              bg="linear-gradient(135deg,#dce8f5,#c8ddf0)" width={120} height={90} />
+          </div>
+
+          {/* Right cluster */}
+          <div style={{ position: "absolute", top: "10%", right: "3%", pointerEvents: "auto" }}>
+            <PhotoCard emoji="🌊" label="slay.png" rotation={5} animClass="anim-float" delay="0.4s"
+              bg="linear-gradient(135deg,#b8d8f0,#90c0e8)" width={170} height={130} />
+          </div>
+          <div style={{ position: "absolute", top: "36%", right: "5%", pointerEvents: "auto" }}>
+            <PhotoCard emoji="🎨" label="slay.png" rotation={-6} animClass="anim-drift" delay="1s"
+              bg="linear-gradient(135deg,#f5d0d0,#f0b8b8)" width={140} height={170} />
+          </div>
+          <div style={{ position: "absolute", top: "26%", right: "18%", pointerEvents: "auto" }}>
+            <PhotoCard emoji="📚" label="Details.jpg" rotation={3} animClass="anim-wiggle" delay="1.5s"
+              bg="linear-gradient(135deg,#f0e0c8,#e8d0a8)" width={120} height={95} />
+          </div>
+        </div>
+
+        {/* ── Centre hero text ── */}
+        <div style={{ textAlign: "center", position: "relative", zIndex: 5, maxWidth: "600px" }}>
+          <h1
+            className="hero-title"
+            style={{
+              fontFamily: "'DM Serif Display', serif",
+              fontSize: "clamp(64px, 10vw, 120px)",
+              fontWeight: "400",
+              lineHeight: "0.92",
+              letterSpacing: "-0.02em",
+              color: "#1a1a1a",
+              marginBottom: "18px",
+            }}
+          >
+            communications{" "}
+            <span className="hl-yellow" style={{ fontStyle: "italic" }}>portfolio</span>
           </h1>
-          <div style={{ marginTop: "24px", display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
-            <span style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: "16px",
-              color: "#555",
-              maxWidth: "360px",
-              lineHeight: "1.6",
-            }}>
-              Strategic communications specialist with expertise in{" "}
-              <span className="scribble">media relations</span>,{" "}
-              <span className="highlight-mint">international affairs</span>, and{" "}
-              stakeholder engagement.
-            </span>
-          </div>
-          <div style={{ marginTop: "28px", display: "flex", gap: "16px", flexWrap: "wrap" }}>
-            <a
-              href="#work"
-              style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "12px",
-                fontWeight: "700",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                background: "#1a1a1a",
-                color: "#f5f0e8",
-                padding: "12px 24px",
-                textDecoration: "none",
-                borderRadius: "3px",
-                display: "inline-block",
-              }}
-            >
-              View My Work ↓
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: "15px",
+            color: "#444",
+            lineHeight: "1.7",
+            maxWidth: "380px",
+            margin: "0 auto 28px",
+          }}>
+            how to go from <span className="wavy">scattered ideas</span>
+            <br />to <strong>strategic storytelling</strong>
+          </p>
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="#assess-damage" className="pill" style={{ background: "rgba(0,0,0,0.85)", color: "white", borderColor: "transparent" }}>
+              explore my work ↓
             </a>
-            <a
-              href="#"
-              style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "12px",
-                fontWeight: "700",
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                border: "2px solid #1a1a1a",
-                color: "#1a1a1a",
-                padding: "12px 24px",
-                textDecoration: "none",
-                borderRadius: "3px",
-                display: "inline-block",
-                background: "transparent",
-              }}
-            >
-              Download CV 📄
-            </a>
+            <a href="#" className="pill">download cv 📄</a>
           </div>
         </div>
 
-        {/* Decorative stamp */}
-        <div style={{
-          position: "absolute",
-          top: "140px",
-          right: "12vw",
-          color: "#FF6B6B",
-          zIndex: 5,
+        {/* ── Mobile photo strip ── */}
+        <div className="mobile-stack" style={{
+          position: "absolute", bottom: "20px", left: 0, right: 0,
+          gap: "12px", overflowX: "auto", padding: "0 20px", justifyContent: "flex-start",
+          flexWrap: "nowrap",
         }}>
-          <div className="stamp" style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "13px", letterSpacing: "0.2em" }}>
-            Portfolio<br />2025
+          {["🤍", "🌊", "🎨", "🌿"].map((e, i) => (
+            <div key={i} className="photo-card" style={{ flexShrink: 0 }}>
+              <div style={{ width: 90, height: 70, background: "linear-gradient(135deg,#dce8f5,#c8ddf0)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "28px" }}>{e}</div>
+              <span className="label">slay.png</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ══ ASSESS DAMAGE = EXPERTISE SECTION ══ */}
+      <section id="assess-damage" style={{
+        minHeight: "90vh", padding: "80px 40px", position: "relative", overflow: "hidden",
+        background: "linear-gradient(180deg, rgba(210,232,248,0) 0%, rgba(240,248,255,0.6) 100%)",
+      }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "60px", alignItems: "center" }}>
+
+          {/* Left: image collage */}
+          <div style={{ position: "relative", height: "480px" }}>
+            <div style={{ position: "absolute", top: 0, left: 0 }}>
+              <PhotoCard emoji="📰" label="press_release.jpg" rotation={-3} animClass="anim-float" delay="0s"
+                bg="linear-gradient(135deg,#e8e0d8,#d4ccc0)" width={200} height={150} />
+            </div>
+            <div style={{ position: "absolute", top: "130px", left: "30px" }}>
+              <PhotoCard emoji="📡" label="media_coverage.jpg" rotation={2} animClass="anim-drift" delay="0.7s"
+                bg="linear-gradient(135deg,#d0e8d8,#b8d8c0)" width={200} height={150} />
+            </div>
+            <div style={{ position: "absolute", top: "260px", left: "10px" }}>
+              <PhotoCard emoji="📊" label="research.jpg" rotation={-4} animClass="anim-floatB" delay="1.3s"
+                bg="linear-gradient(135deg,#d8e8f8,#c0d8f0)" width={190} height={140} />
+            </div>
           </div>
-        </div>
 
-        {/* Photo cards – desktop floating, mobile stacked */}
-        <div className="floating-card" style={{ position: "absolute", top: "160px", right: "4vw", zIndex: 8 }}>
-          <PhotoCard title="Culture.jpg" rotation={-5} tapeColor="yellow">
-            <div style={{
-              width: "180px", height: "140px",
-              background: "linear-gradient(135deg, #FFD166 0%, #FF9EAA 100%)",
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-              fontSize: "36px", gap: "8px",
+          {/* Right: text + expertise cards */}
+          <div>
+            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", color: "#888", marginBottom: "12px", textTransform: "uppercase" }}>
+              ── areas of expertise
+            </p>
+            <h2 style={{
+              fontFamily: "'DM Serif Display', serif",
+              fontSize: "clamp(36px, 5vw, 60px)",
+              fontWeight: "400", lineHeight: "1", marginBottom: "28px",
             }}>
-              🌎<span style={{ fontFamily: "'Bebas Neue'", fontSize: "18px", color: "white", letterSpacing: "0.1em" }}>INTERNATIONAL</span>
-            </div>
-          </PhotoCard>
-        </div>
+              assess the{" "}
+              <span className="hl-yellow" style={{ fontStyle: "italic" }}>damage</span>
+            </h2>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#555", lineHeight: "1.8", marginBottom: "32px", maxWidth: "340px" }}>
+              before we communicate, we must understand the landscape: the unaddressed story, the missed angle, the message that never landed.
+            </p>
 
-        <div className="floating-card animate-float-medium" style={{ position: "absolute", top: "340px", right: "20vw", zIndex: 7 }}>
-          <PhotoCard title="Details.jpg" rotation={4} tapeColor="pink">
-            <div style={{
-              width: "160px", height: "120px",
-              background: "linear-gradient(135deg, #A8E6CF 0%, #C5B8FF 100%)",
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-              fontSize: "32px",
-            }}>
-              📊
+            {/* Expertise floating cards — stacked here, floating in hero */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "flex-start" }}>
+              {[
+                { emoji: "📰", label: "Press Releases", delay: "0s" },
+                { emoji: "🎙️", label: "Media Relations", delay: "0.3s" },
+                { emoji: "📊", label: "Research", delay: "0.6s" },
+                { emoji: "🤝", label: "Stakeholder Engagement", delay: "0.9s" },
+                { emoji: "🌎", label: "International Affairs", delay: "1.2s" },
+                { emoji: "📱", label: "Content Strategy", delay: "1.5s" },
+              ].map((c, i) => (
+                <ExpertiseCard key={c.label} {...c} rotation={i % 2 === 0 ? -1 : 1} />
+              ))}
             </div>
-          </PhotoCard>
+          </div>
         </div>
 
         {/* Sticky note */}
-        <div className="floating-card animate-float-slow" style={{
-          position: "absolute", bottom: "120px", right: "6vw",
-          zIndex: 9, animationDelay: "1s",
-        }}>
-          <div className="sticky-note" style={{ maxWidth: "180px", transform: "rotate(3deg)" }}>
-            <p style={{ fontSize: "12px", marginTop: "8px", lineHeight: "1.6" }}>
-              &ldquo;Communications is not what you say — it&rsquo;s what people <strong>understand</strong>.&rdquo;
+        <div className="anim-wiggle" style={{
+          position: "absolute", bottom: "60px", right: "5%",
+          "--r": "-3deg", transform: "rotate(-3deg)",
+          maxWidth: "200px", zIndex: 5,
+        } as React.CSSProperties}>
+          <div className="sticky">
+            <span style={{ background: "#f5e642", padding: "1px 4px", fontWeight: "600", fontSize: "12px" }}>affirmation</span>
+            <p style={{ marginTop: "10px", fontSize: "12px" }}>
+              you are not lost in the message. you are just in your strategy era. eras can always change xx
             </p>
           </div>
         </div>
-
-        {/* Decorative scribble circle */}
-        <svg
-          style={{ position: "absolute", top: "180px", left: "42vw", opacity: 0.15, pointerEvents: "none" }}
-          width="200" height="200" viewBox="0 0 200 200"
-        >
-          <ellipse cx="100" cy="100" rx="90" ry="70" fill="none" stroke="#1a1a1a" strokeWidth="2"
-            strokeDasharray="8 4" />
-        </svg>
-
-        {/* Bottom border tape strip */}
-        <div style={{
-          position: "absolute", bottom: "0", left: "0", right: "0", height: "6px",
-          background: "repeating-linear-gradient(90deg, #FFE135 0px, #FFE135 40px, transparent 40px, transparent 60px, #FF9EAA 60px, #FF9EAA 100px, transparent 100px, transparent 120px)",
-          opacity: 0.6,
-        }} />
       </section>
 
-      {/* ── FLOATING CARDS / EXPERTISE SECTION ── */}
-      <section
-        id="expertise"
-        style={{
-          minHeight: "80vh",
-          padding: "80px 40px",
-          position: "relative",
-          background: "linear-gradient(180deg, #f5f0e8 0%, #ede8df 100%)",
-          overflow: "hidden",
-        }}
-      >
-        <div style={{ marginBottom: "60px" }}>
-          <p style={{
-            fontFamily: "'Space Mono', monospace", fontSize: "10px",
-            letterSpacing: "0.25em", textTransform: "uppercase", color: "#888", marginBottom: "8px",
-          }}>
-            ── AREAS OF EXPERTISE
-          </p>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(32px, 5vw, 64px)", fontWeight: "700" }}>
-            What I <span className="highlight-pink">do</span>
-          </h2>
-        </div>
-
-        {/* Desktop: absolute-positioned collage layout */}
-        <div style={{ position: "relative", minHeight: "420px" }} className="hidden md:block">
-          {floatingCards.map((card, i) => {
-            const positions = [
-              { left: "5%", top: "20px" },
-              { left: "22%", top: "180px" },
-              { left: "42%", top: "40px" },
-              { left: "60%", top: "200px" },
-              { left: "18%", top: "330px" },
-              { left: "52%", top: "310px" },
-            ];
-            return (
-              <div key={card.label} style={{ position: "absolute", ...positions[i], zIndex: 5 }}>
-                <FloatingCard {...card} />
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Mobile: flex grid */}
-        <div className="flex md:hidden flex-wrap gap-4 justify-center">
-          {floatingCards.map((card) => (
-            <FloatingCard key={card.label} {...card} />
-          ))}
-        </div>
-
-        {/* Decorative large letter */}
-        <div style={{
-          position: "absolute", bottom: "-20px", right: "5vw",
-          fontFamily: "'Bebas Neue', sans-serif", fontSize: "200px",
-          color: "rgba(0,0,0,0.04)", lineHeight: "1", pointerEvents: "none", userSelect: "none",
-          letterSpacing: "-0.02em",
-        }}>
-          COMMS
-        </div>
-      </section>
-
-      {/* ── WORK / DELIVERABLES SECTION ── */}
-      <section
-        id="work"
-        style={{
-          padding: "80px 40px 100px",
-          position: "relative",
-          background: "#1a1a1a",
-          overflow: "hidden",
-        }}
-      >
-        <div style={{ marginBottom: "60px" }}>
-          <p style={{
-            fontFamily: "'Space Mono', monospace", fontSize: "10px",
-            letterSpacing: "0.25em", textTransform: "uppercase", color: "#888", marginBottom: "8px",
-          }}>
-            ── MY WORK
+      {/* ══ AURA CLEANSE = DELIVERABLES ══ */}
+      <section id="aura-cleanse" style={{
+        minHeight: "80vh", padding: "80px 40px",
+        background: "#1a1a1a", position: "relative", overflow: "hidden",
+      }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+          <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", color: "#666", marginBottom: "12px", textTransform: "uppercase" }}>
+            ── my deliverables
           </p>
           <h2 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(32px, 5vw, 64px)", fontWeight: "700", color: "#f5f0e8",
+            fontFamily: "'DM Serif Display', serif",
+            fontSize: "clamp(36px, 5vw, 64px)",
+            fontWeight: "400", color: "#f7f3ee", marginBottom: "16px", lineHeight: "1",
           }}>
-            Open a{" "}
-            <span className="highlight-yellow">folder</span>
+            cleanse the{" "}
+            <span className="hl-mint" style={{ fontStyle: "italic", color: "#1a1a1a" }}>aura</span>
           </h2>
-          <p style={{
-            fontFamily: "'Inter', sans-serif", fontSize: "15px", color: "#aaa",
-            marginTop: "12px", maxWidth: "420px", lineHeight: "1.7",
-          }}>
-            Each tab holds real deliverables from my professional practice. Click to explore.
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "#888", marginBottom: "52px", lineHeight: "1.7", maxWidth: "420px" }}>
+            if it doesn&rsquo;t spark clarity,<br />it sparks the archive xx
           </p>
-        </div>
 
-        {/* Folder tabs grid */}
-        <div style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "24px",
-          alignItems: "flex-end",
-        }}>
-          {deliverables.map((d) => (
-            <DeliverableButton key={d.label} {...d} />
-          ))}
-        </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", alignItems: "flex-end" }}>
+            <FolderBtn label="Reports"         icon="📋" color="#FFD166" rotation={-2} />
+            <FolderBtn label="Press Notes"     icon="📝" color="#FF9EAA" rotation={1} />
+            <FolderBtn label="Media Monitoring" icon="📡" color="#A8E6CF" textColor="#1a1a1a" rotation={-3} />
+            <FolderBtn label="Writing Samples" icon="✍️" color="#C5B8FF" rotation={2} />
+            <FolderBtn label="Certifications"  icon="🏆" color="#FFB347" rotation={-1} />
+            <FolderBtn label="Resumen / CV"    icon="📄" color="#87CEEB" rotation={3} />
+          </div>
 
-        {/* Decorative dotted rule */}
-        <div style={{
-          marginTop: "80px",
-          borderTop: "1.5px dashed rgba(255,255,255,0.1)",
-          paddingTop: "40px",
-          display: "flex",
-          gap: "32px",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}>
+          {/* Decorative big text */}
+          <div style={{
+            marginTop: "80px",
+            fontFamily: "'DM Serif Display', serif",
+            fontSize: "clamp(60px, 12vw, 140px)",
+            color: "rgba(255,255,255,0.03)",
+            lineHeight: "1", userSelect: "none", pointerEvents: "none",
+            letterSpacing: "-0.02em",
+          }}>
+            STRATEGIC
+          </div>
+        </div>
+      </section>
+
+      {/* ══ THE FORMULA = ABOUT ══ */}
+      <section id="the-formula" style={{
+        minHeight: "70vh", padding: "80px 40px",
+        background: "linear-gradient(180deg, #d0e5f5 0%, #c4ddf0 100%)",
+        position: "relative", overflow: "hidden",
+      }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto", display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "60px", alignItems: "center" }}>
           <div>
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "11px", color: "#666", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-              Available for freelance &amp; consulting
+            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", color: "#888", marginBottom: "12px", textTransform: "uppercase" }}>
+              ── about me
             </p>
-            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "22px", color: "#f5f0e8", marginTop: "6px", fontStyle: "italic" }}>
-              Let&rsquo;s craft your narrative together.
+            <h2 style={{
+              fontFamily: "'DM Serif Display', serif",
+              fontSize: "clamp(36px, 5vw, 60px)",
+              fontWeight: "400", lineHeight: "1", marginBottom: "24px",
+            }}>
+              the{" "}
+              <span className="hl-pink" style={{ fontStyle: "italic" }}>formula</span>
+            </h2>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: "#333", lineHeight: "1.8", marginBottom: "20px" }}>
+              Strategic communications professional based in Panama City, with expertise spanning{" "}
+              <span className="wavy">media relations</span>, international affairs, and stakeholder engagement.
             </p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: "#333", lineHeight: "1.8", marginBottom: "32px" }}>
+              I craft narratives that move people — from press rooms to policy tables.
+            </p>
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+                className="pill" style={{ background: "#0077B5", color: "white", borderColor: "transparent" }}>
+                💼 LinkedIn ↗
+              </a>
+              <a href="mailto:placeholder@email.com"
+                className="pill" style={{ background: "rgba(255,255,255,0.7)" }}>
+                ✉️ Email Me
+              </a>
+            </div>
           </div>
-          <a
-            href="#contact"
-            style={{
-              fontFamily: "'Space Mono', monospace", fontSize: "12px", fontWeight: "700",
-              letterSpacing: "0.08em", textTransform: "uppercase",
-              background: "#FFE135", color: "#1a1a1a",
-              padding: "14px 28px", textDecoration: "none", borderRadius: "3px",
-              whiteSpace: "nowrap",
-              transition: "transform 0.2s",
-            }}
-          >
-            Get in Touch ✉️
-          </a>
+
+          {/* Right: scattered mini cards */}
+          <div style={{ position: "relative", height: "320px" }}>
+            <div className="anim-float" style={{ "--r": "-4deg", position: "absolute", top: 0, left: "10%" } as React.CSSProperties}>
+              <PhotoCard emoji="🌎" label="international.jpg" rotation={-4} animClass="" delay="0s"
+                bg="linear-gradient(135deg,#a8d8ea,#8ec8e0)" width={160} height={120} />
+            </div>
+            <div className="anim-drift" style={{ "--r": "5deg", position: "absolute", top: "140px", left: "30%" } as React.CSSProperties}>
+              <PhotoCard emoji="🎙️" label="media.jpg" rotation={5} animClass="" delay="0s"
+                bg="linear-gradient(135deg,#f5d0d8,#f0b8c4)" width={150} height={110} />
+            </div>
+          </div>
         </div>
 
-        {/* Background watermark */}
-        <div style={{
-          position: "absolute", top: "50%", left: "50%",
-          transform: "translate(-50%, -50%) rotate(-15deg)",
-          fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(80px, 15vw, 200px)",
-          color: "rgba(255,255,255,0.02)", pointerEvents: "none", userSelect: "none",
-          whiteSpace: "nowrap", letterSpacing: "0.05em",
-        }}>
-          STRATEGIC
+        {/* Location sticky */}
+        <div className="anim-float" style={{
+          position: "absolute", bottom: "40px", right: "5%",
+          "--r": "3deg", transform: "rotate(3deg)", zIndex: 5,
+          animationDelay: "0.8s",
+        } as React.CSSProperties}>
+          <div className="sticky" style={{ maxWidth: "180px" }}>
+            <p style={{ fontSize: "12px" }}>
+              📍 Panama City<br />
+              🌐 Available worldwide<br />
+              🗣️ EN / ES
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* ── CONTACT SECTION ── */}
-      <section
-        id="contact"
-        style={{
-          padding: "80px 40px",
-          position: "relative",
-          background: "#f5f0e8",
-          overflow: "hidden",
-        }}
-      >
-        <div style={{ maxWidth: "700px", position: "relative", zIndex: 2 }}>
-          <p style={{
-            fontFamily: "'Space Mono', monospace", fontSize: "10px",
-            letterSpacing: "0.25em", textTransform: "uppercase", color: "#888", marginBottom: "8px",
-          }}>
-            ── CONNECT
+      {/* ══ SERVING XX = CONNECT ══ */}
+      <section id="serving-xx" style={{
+        minHeight: "50vh", padding: "80px 40px",
+        background: "linear-gradient(180deg, #c4ddf0 0%, #b8d4ec 100%)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        textAlign: "center", position: "relative",
+      }}>
+        <div style={{ position: "relative", zIndex: 2 }}>
+          <p style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", color: "#888", marginBottom: "12px", textTransform: "uppercase" }}>
+            ── serving xx
           </p>
           <h2 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(36px, 6vw, 80px)", fontWeight: "900", lineHeight: "0.95",
-            letterSpacing: "-0.02em", marginBottom: "32px",
+            fontFamily: "'DM Serif Display', serif",
+            fontSize: "clamp(48px, 8vw, 100px)",
+            fontWeight: "400", lineHeight: "0.9", marginBottom: "28px",
           }}>
-            Say{" "}
-            <span className="highlight-yellow" style={{ fontStyle: "italic" }}>hello</span>
+            say{" "}
+            <span className="hl-yellow" style={{ fontStyle: "italic" }}>hello</span>
             <br />
             <span style={{ color: "#555", fontStyle: "italic" }}>& let&rsquo;s talk.</span>
           </h2>
-
-          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                fontFamily: "'Space Mono', monospace", fontSize: "12px", fontWeight: "700",
-                letterSpacing: "0.06em", textTransform: "uppercase",
-                background: "#0077B5", color: "white",
-                padding: "12px 24px", textDecoration: "none", borderRadius: "3px",
-                display: "inline-flex", alignItems: "center", gap: "8px",
-              }}
-            >
-              💼 LinkedIn
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+              className="pill" style={{ background: "#0077B5", color: "white", borderColor: "transparent", fontSize: "14px" }}>
+              💼 LinkedIn ↗
             </a>
-            <a
-              href="mailto:placeholder@email.com"
-              style={{
-                fontFamily: "'Space Mono', monospace", fontSize: "12px", fontWeight: "700",
-                letterSpacing: "0.06em", textTransform: "uppercase",
-                border: "2px solid #1a1a1a", color: "#1a1a1a",
-                padding: "12px 24px", textDecoration: "none", borderRadius: "3px",
-                display: "inline-flex", alignItems: "center", gap: "8px",
-                background: "transparent",
-              }}
-            >
+            <a href="mailto:placeholder@email.com"
+              className="pill" style={{ background: "rgba(255,255,255,0.75)", fontSize: "14px" }}>
               ✉️ Email Me
             </a>
           </div>
         </div>
 
-        {/* Floating card decoration in contact section */}
-        <div className="floating-card animate-float-slow" style={{
-          position: "absolute", top: "60px", right: "8vw", zIndex: 5, animationDelay: "0.5s",
-        }}>
-          <div className="sticky-note" style={{ transform: "rotate(-4deg)", maxWidth: "200px" }}>
-            <p style={{ fontSize: "11px", marginTop: "8px", lineHeight: "1.7" }}>
-              📍 Panama City, Panama<br />
-              🌐 Available Worldwide<br />
-              🗣️ EN / ES
-            </p>
-          </div>
+        {/* Floating cards scattered */}
+        <div className="anim-float desktop-collage" style={{
+          position: "absolute", top: "30px", left: "5%", "--r": "-5deg",
+          animationDelay: "0.3s",
+        } as React.CSSProperties}>
+          <ExpertiseCard emoji="📱" label="Content Strategy" rotation={-5} animClass="" />
         </div>
-
-        {/* Decorative shapes */}
-        <svg
-          style={{ position: "absolute", bottom: "20px", right: "20vw", opacity: 0.08, pointerEvents: "none" }}
-          width="240" height="240" viewBox="0 0 240 240"
-        >
-          <circle cx="120" cy="120" r="100" fill="none" stroke="#1a1a1a" strokeWidth="3" />
-          <circle cx="120" cy="120" r="70" fill="none" stroke="#1a1a1a" strokeWidth="1.5" strokeDasharray="6 3" />
-        </svg>
+        <div className="anim-floatB desktop-collage" style={{
+          position: "absolute", bottom: "40px", right: "6%", "--r": "4deg",
+          animationDelay: "0.9s",
+        } as React.CSSProperties}>
+          <ExpertiseCard emoji="🤝" label="Stakeholder Engagement" rotation={4} animClass="" />
+        </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      {/* ══ FOOTER ══ */}
       <footer style={{
-        background: "#1a1a1a",
-        padding: "20px 40px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        gap: "12px",
+        background: "#1a1a1a", padding: "16px 40px",
+        display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px",
       }}>
-        <span style={{
-          fontFamily: "'Bebas Neue', sans-serif", fontSize: "18px",
-          letterSpacing: "0.1em", color: "#f5f0e8",
-        }}>
-          ISABELLA ALEMÁN © 2025
+        <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: "18px", color: "#f7f3ee", fontStyle: "italic" }}>
+          Isabella Alemán
         </span>
-        <span style={{
-          fontFamily: "'Space Mono', monospace", fontSize: "10px",
-          color: "#555", letterSpacing: "0.08em",
-        }}>
-          STRATEGIC COMMUNICATIONS · PANAMA
+        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "10px", color: "#555", letterSpacing: "0.08em" }}>
+          STRATEGIC COMMUNICATIONS · PANAMA · 2025
         </span>
       </footer>
     </div>
